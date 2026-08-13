@@ -9,15 +9,11 @@
   },
   "rewrites": [
     {
-      "source": "/api/og",
-      "destination": "/api/og"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     },
     {
-      "source": "/api/index",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/((?!assets/|.*\\..*).*)",
+      "source": "/((?!api/|assets/|.*\\..*).*)",
       "destination": "/api/index"
     }
   ]
