@@ -1,9 +1,0 @@
-{
-  "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/((?!api/|assets/|og-banner.jpg|favicon.ico).*)",
-      "destination": "/index.html"
-    }
-  ]
-}
