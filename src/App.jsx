@@ -56,17 +56,17 @@ export default function App() {
           cloudPhotoUrl: urlPhoto || prev.cloudPhotoUrl
         }));
 
-        if (urlPhoto) {
-          const img = new Image();
-          img.crossOrigin = 'anonymous';
-          img.src = urlPhoto;
-          img.onload = () => {
-            setEditorState((prev) => ({
-              ...prev,
-              imageObj: img
-            }));
-          };
-        }
+      // Unconditionally load photo (custom photo from URL or default sample avatar)
+      const photoToLoad = urlPhoto || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80';
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = photoToLoad;
+      img.onload = () => {
+        setEditorState((prev) => ({
+          ...prev,
+          imageObj: img
+        }));
+      };
 
         // Dynamically update document title & OpenGraph metadata
         const displayTitle = urlName
