@@ -73,40 +73,40 @@ function renderHeaderBranding(ctx, width, height, options) {
 
   ctx.save();
 
-  // Top-Left Badge: Specific Font "Rubik Mono One" (230x54px)
-  drawRoundedRect(ctx, 35, 35, 230, 54, 10, '#FFDF00', '#121814', 3);
-  ctx.font = '700 16px "Rubik Mono One", "Share Tech Mono", monospace';
+  // Top-Left Badge: "2:47PM STUDIO" (190x44px)
+  drawRoundedRect(ctx, 35, 30, 190, 44, 8, '#FFDF00', '#121814', 2.5);
+  ctx.font = '700 14px "Rubik Mono One", "Share Tech Mono", monospace';
   ctx.fillStyle = '#121814';
   ctx.textAlign = 'center';
-  ctx.fillText('2:47PM STUDIO', 150, 68);
+  ctx.fillText('2:47PM STUDIO', 130, 57);
 
-  // Top-Right Badge: Prominent Hot-Pink Pill "#FrameInGoa" (230x54px)
-  drawRoundedRect(ctx, width - 265, 35, 230, 54, 27, '#FF007A', '#FFFFFF', 3);
-  ctx.font = '800 22px "Share Tech Mono", monospace';
+  // Center Devanagari Badge "गोवा" (Cleanly positioned between badges)
+  ctx.save();
+  ctx.translate(width / 2, 52);
+  ctx.rotate(-0.04);
+  drawRoundedRect(ctx, -42, -20, 84, 40, 10, '#FF007A', '#FFFFFF', 2.5);
+  ctx.font = '400 22px "Yatra One", "Rozha One", "Outfit", sans-serif';
   ctx.fillStyle = '#FFFFFF';
   ctx.textAlign = 'center';
-  ctx.fillText('#FrameInGoa', width - 150, 69);
+  ctx.fillText('गोवा', 0, 7);
+  ctx.restore();
 
-  // Main Header Title: Specific Ultra-Condensed Serif Font "Bodoni Moda" / "Instrument Serif"
-  const headerY = 132;
-  ctx.font = '900 72px "Bodoni Moda", "Instrument Serif", "Playfair Display", Georgia, serif';
+  // Top-Right Badge: Prominent Hot-Pink Pill "#FrameInGoa" (190x44px)
+  drawRoundedRect(ctx, width - 225, 30, 190, 44, 22, '#FF007A', '#FFFFFF', 2.5);
+  ctx.font = '800 18px "Share Tech Mono", monospace';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'center';
+  ctx.fillText('#FrameInGoa', width - 130, 58);
+
+  // Main Header Title: "HACKER HOUSE" (Positioned at Y=148 with zero collision)
+  const headerY = 148;
+  ctx.font = '900 64px "Bodoni Moda", "Instrument Serif", "Playfair Display", Georgia, serif';
   ctx.fillStyle = badgeColor;
   ctx.textAlign = 'center';
   ctx.shadowColor = 'rgba(0,0,0,0.4)';
-  ctx.shadowBlur = 8;
-  ctx.fillText('HACKER HOUSE', width / 2 - 25, headerY);
+  ctx.shadowBlur = 6;
+  ctx.fillText('HACKER HOUSE', width / 2, headerY);
   ctx.shadowBlur = 0;
-
-  // Devanagari Overlay Badge "गोवा" (Specific Font "Yatra One")
-  ctx.save();
-  ctx.translate(width / 2 + 175, headerY - 24);
-  ctx.rotate(-0.06);
-  drawRoundedRect(ctx, -40, -20, 80, 40, 10, '#FF007A', '#FFFFFF', 2.5);
-  ctx.font = '400 24px "Yatra One", "Rozha One", "Outfit", sans-serif';
-  ctx.fillStyle = '#FFFFFF';
-  ctx.textAlign = 'center';
-  ctx.fillText('गोवा', 0, 8);
-  ctx.restore();
 
   ctx.restore();
 }
