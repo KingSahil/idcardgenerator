@@ -127,22 +127,23 @@ export default function ExportActions({ activeFormat, state }) {
       console.warn('Clipboard write error:', clipErr);
     }
 
-    // 2. Upload image to Free Cloud Storage (tmpfiles.org)
+    // 2. Upload image to Free Cloud Storage (Catbox.moe - Direct image/png URL)
     try {
       const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
       if (blob) {
         const formData = new FormData();
-        formData.append('file', blob, `hh-goa-2026-${activeFormat.toLowerCase()}-${Date.now()}.png`);
+        formData.append('reqtype', 'fileupload');
+        formData.append('fileToUpload', blob, `hh-goa-2026-${activeFormat.toLowerCase()}-${Date.now()}.png`);
         
-        const res = await fetch('https://tmpfiles.org/api/v1/upload', {
+        const res = await fetch('https://catbox.moe/user/api.php', {
           method: 'POST',
           body: formData,
         });
 
         if (res.ok) {
-          const json = await res.json();
-          if (json?.data?.url) {
-            cloudImageUrl = json.data.url.replace('https://tmpfiles.org/', 'https://tmpfiles.org/dl/');
+          const directUrl = await res.text();
+          if (directUrl && directUrl.trim().startsWith('https://')) {
+            cloudImageUrl = directUrl.trim();
           }
         }
       }
