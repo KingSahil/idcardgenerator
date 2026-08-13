@@ -80,6 +80,7 @@ export default function ExportActions({ activeFormat, state }) {
       url.searchParams.set('format', activeFormat);
       if (state.name && state.name !== 'Satoshi Nakamoto') url.searchParams.set('name', state.name);
       if (state.builderTitle && !state.builderTitle.includes('Goa Vibe Coder')) url.searchParams.set('title', state.builderTitle);
+      url.searchParams.set('v', '1');
       return url.toString();
     } catch (e) {
       return window.location.origin;
