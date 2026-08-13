@@ -106,14 +106,15 @@ export default function ExportActions({ activeFormat, state }) {
     window.open(intentUrl, '_blank');
   };
 
-  // Devfolio & Hackhazards Automated Share Workflow
+  // Devfolio & Hackhazards Automated Share Workflow with Free Cloud Storage Upload
   const handleShareToX = async () => {
     const canvas = getCanvas();
     if (!canvas) return;
 
     let copySuccess = false;
+    let cloudImageUrl = '';
 
-    // 1. Use ClipboardItem with Promise<Blob> to preserve user focus & activation
+    // 1. Copy image to clipboard synchronously
     try {
       if (navigator.clipboard && typeof ClipboardItem !== 'undefined' && navigator.clipboard.write) {
         const blobPromise = new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
@@ -124,29 +125,64 @@ export default function ExportActions({ activeFormat, state }) {
       }
     } catch (clipErr) {
       console.warn('Clipboard write error:', clipErr);
-      // Fallback if Promise<Blob> ClipboardItem fails in older engines
-      try {
-        const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
-        if (blob) {
-          await navigator.clipboard.write([
-            new ClipboardItem({ 'image/png': blob })
-          ]);
-          copySuccess = true;
-        }
-      } catch (fallbackErr) {
-        console.warn('Clipboard fallback error:', fallbackErr);
-      }
     }
 
-    // 2. Open X Intent URL in new tab
-    openXIntent();
+    // 2. Upload image to Free Cloud Storage (tmpfiles.org)
+    try {
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+      if (blob) {
+        const formData = new FormData();
+        formData.append('file', blob, `hh-goa-2026-${activeFormat.toLowerCase()}-${Date.now()}.png`);
+        
+        const res = await fetch('https://tmpfiles.org/api/v1/upload', {
+          method: 'POST',
+          body: formData,
+        });
 
-    // 3. Trigger celebratory confetti & show guide modal
+        if (res.ok) {
+          const json = await res.json();
+          if (json?.data?.url) {
+            cloudImageUrl = json.data.url.replace('https://tmpfiles.org/', 'https://tmpfiles.org/dl/');
+          }
+        }
+      }
+    } catch (uploadErr) {
+      console.warn('Free cloud storage upload error:', uploadErr);
+    }
+
+    // 3. Construct Tweet Text with direct Cloud Image URL & Share Link
+    const shareUrl = getUniqueShareUrl();
+    let tweetCaption = '';
+
+    if (activeFormat === 'A') {
+      tweetCaption = `Just framed my PFP for HackHazards Goa 2026! 🌴🚀 See you in Goa!`;
+      if (cloudImageUrl) {
+        tweetCaption += `\n\n🖼️ PFP Frame: ${cloudImageUrl}`;
+      }
+      tweetCaption += `\n\nView my card & generate yours: ${shareUrl} #FrameInGoa #HHGoa2026`;
+    } else {
+      const nameStr = state.name ? `\n👤 ${state.name}` : '';
+      const titleStr = state.builderTitle ? `\n⚡ ${state.builderTitle}` : '';
+      const stackStr = state.stack ? `\n🛠️ Stack: ${state.stack}` : '';
+      
+      tweetCaption = `Excited for HackHazards Goa 2026! 🌴🚀 Here is my official Builder ID Badge:${nameStr}${titleStr}${stackStr}`;
+      if (cloudImageUrl) {
+        tweetCaption += `\n\n🆔 Builder Badge: ${cloudImageUrl}`;
+      }
+      tweetCaption += `\n\nView my badge & generate yours: ${shareUrl} #FrameInGoa #HHGoa2026`;
+    }
+
+    // 4. Open X Intent URL
+    const encodedText = encodeURIComponent(tweetCaption);
+    const intentUrl = `https://x.com/intent/post?text=${encodedText}`;
+    window.open(intentUrl, '_blank');
+
+    // 5. Celebration confetti & show guidance modal
     triggerConfetti();
     setShareStatus(
       copySuccess
-        ? '✓ Graphic copied to clipboard! Click X window & hit Ctrl+V.'
-        : '✓ X Intent opened! Click "Re-copy Image" if paste needed.'
+        ? '✓ Free Cloud Image attached & copied to clipboard! Hit Ctrl+V if desired.'
+        : '✓ Free Cloud Image attached to tweet!'
     );
     setShowModal(true);
 
