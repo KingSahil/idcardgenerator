@@ -109,10 +109,14 @@ export function renderFormatB(ctx, width, height, state) {
     ctx.drawImage(imageObj, -dw / 2, -dh / 2, dw, dh);
     ctx.restore();
   } else {
-    ctx.font = '700 18px "Share Tech Mono", monospace';
-    ctx.fillStyle = '#FFFDF0';
+    ctx.font = '700 17px "Share Tech Mono", monospace';
+    ctx.fillStyle = '#FFDF00';
     ctx.textAlign = 'center';
-    ctx.fillText('UPLOAD PHOTO', avatarCenterX, avatarCenterY);
+    ctx.fillText('CLICK / DROP PHOTO', avatarCenterX, avatarCenterY - 6);
+
+    ctx.font = '600 13px "Outfit", sans-serif';
+    ctx.fillStyle = '#FFFDF0';
+    ctx.fillText('(PNG, JPG, HEIC)', avatarCenterX, avatarCenterY + 18);
   }
 
   ctx.restore(); // Restore clip

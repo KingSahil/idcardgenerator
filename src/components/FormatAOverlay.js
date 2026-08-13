@@ -154,10 +154,14 @@ function renderSinglePFP(ctx, width, height, imageObj, options) {
     ctx.drawImage(imageObj, -dw / 2, -dh / 2, dw, dh);
     ctx.restore();
   } else {
-    ctx.font = '700 26px "Share Tech Mono", monospace';
-    ctx.fillStyle = '#FFFDF0';
+    ctx.font = '700 24px "Share Tech Mono", monospace';
+    ctx.fillStyle = '#FFDF00';
     ctx.textAlign = 'center';
-    ctx.fillText('UPLOAD PHOTO', centerX, centerY);
+    ctx.fillText('CLICK OR DROP PHOTO', centerX, centerY - 8);
+
+    ctx.font = '600 15px "Outfit", sans-serif';
+    ctx.fillStyle = '#FFFDF0';
+    ctx.fillText('(PNG, JPG, WebP, HEIC)', centerX, centerY + 24);
   }
 
   ctx.restore(); // Restore clip

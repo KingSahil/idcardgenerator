@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import FormatSelector from './components/FormatSelector';
-import PhotoUploader from './components/PhotoUploader';
 import CanvasEditor from './components/CanvasEditor';
 import ControlPanel from './components/ControlPanel';
 import ExportActions from './components/ExportActions';
@@ -29,6 +28,63 @@ export default function App() {
     badgeId: `HHGOA-2026-${Math.floor(1000 + Math.random() * 9000)}`,
     theme: 'dark_green'
   });
+
+  // URL Query Parameter Hydration for unique share links
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlFormat = params.get('format');
+      const urlName = params.get('name');
+      const urlTitle = params.get('title');
+      const urlStack = params.get('stack');
+      const urlTeam = params.get('team');
+      const urlBadgeId = params.get('badgeId');
+
+      if (urlFormat === 'A' || urlFormat === 'B') {
+        setActiveFormat(urlFormat);
+      }
+
+      if (urlName || urlTitle || urlStack || urlTeam || urlBadgeId) {
+        setEditorState((prev) => ({
+          ...prev,
+          name: urlName || prev.name,
+          builderTitle: urlTitle || prev.builderTitle,
+          stack: urlStack || prev.stack,
+          teamName: urlTeam || prev.teamName,
+          badgeId: urlBadgeId || prev.badgeId
+        }));
+
+        // Dynamically update document title & OpenGraph metadata
+        const displayTitle = urlName
+          ? `${urlName} — HH Goa 2026 ${urlFormat === 'A' ? 'PFP Frame' : 'Builder Badge'}`
+          : 'HH Goa 2026 — Frame & Builder ID Card Generator';
+
+        document.title = displayTitle;
+
+        const ogParams = new URLSearchParams({
+          format: urlFormat || 'A',
+          name: urlName || 'Builder',
+          title: urlTitle || 'Goa Vibe Coder 🌴',
+          badgeId: urlBadgeId || 'HHGOA-2026'
+        });
+        const absoluteOgImage = `${window.location.origin}/api/og?${ogParams.toString()}`;
+
+        const ogTitleMeta = document.querySelector('meta[property="og:title"]');
+        if (ogTitleMeta) ogTitleMeta.setAttribute('content', displayTitle);
+
+        const twitterTitleMeta = document.querySelector('meta[name="twitter:title"]');
+        if (twitterTitleMeta) twitterTitleMeta.setAttribute('content', displayTitle);
+
+        const ogImageMeta = document.querySelector('meta[property="og:image"]');
+        if (ogImageMeta) ogImageMeta.setAttribute('content', absoluteOgImage);
+
+        const twitterImageMeta = document.querySelector('meta[name="twitter:image"]');
+        if (twitterImageMeta) twitterImageMeta.setAttribute('content', absoluteOgImage);
+      }
+    } catch (e) {
+      console.warn('URL parameter hydration error:', e);
+    }
+  }, []);
 
   // Photo Loaded Handler
   const handleImageLoaded = (result) => {
@@ -107,12 +163,6 @@ export default function App() {
                 <span className="text-[#FF007A]">01 / 01</span>
               </div>
 
-              {/* Photo Uploader */}
-              <PhotoUploader
-                onImageLoaded={handleImageLoaded}
-                hasImage={!!editorState.imageObj}
-              />
-
               {/* Form Input Control Panel */}
               <ControlPanel
                 activeFormat={activeFormat}
@@ -139,11 +189,12 @@ export default function App() {
                 </span>
               </div>
 
-              {/* Canvas Editor */}
+              {/* Canvas Editor with Direct Drag & Drop Photo Upload */}
               <CanvasEditor
                 activeFormat={activeFormat}
                 state={editorState}
                 onUpdatePan={handleUpdatePan}
+                onImageLoaded={handleImageLoaded}
               />
 
               {/* Export & Sharing Actions */}
