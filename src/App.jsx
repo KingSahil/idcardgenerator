@@ -6,7 +6,7 @@ import CanvasEditor from './components/CanvasEditor';
 import ControlPanel from './components/ControlPanel';
 import ExportActions from './components/ExportActions';
 import { getRandomTitle } from './utils/titleGenerator';
-import { Sparkles, Info } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 export default function App() {
   const [activeFormat, setActiveFormat] = useState('A'); // 'A' (PFP) | 'B' (Builder ID)
@@ -80,12 +80,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFDF0] flex flex-col font-sans selection:bg-[#FF007A] selection:text-white">
-      {/* Header Bar */}
+    <div className="min-h-screen bg-[#07150E] text-[#FFFDF0] flex flex-col font-sans selection:bg-[#FF007A] selection:text-white">
+      {/* Neo-brutalist Header Bar */}
       <Header />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-6 flex flex-col items-center gap-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-4 flex flex-col items-center gap-6">
         
         {/* Format Selector Tabs */}
         <FormatSelector
@@ -95,39 +95,47 @@ export default function App() {
           onToggleMultiTeammate={setIsMultiTeammate}
         />
 
-        {/* Studio Grid Layout */}
+        {/* Generator Panel Grid Layout matching C:\GitRepos\goa UI/UX */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* LEFT COLUMN: Controls & Form Inputs (Lg: 5 cols) */}
-          <div className="lg:col-span-5 flex flex-col gap-5 order-2 lg:order-1">
-            {/* Step 1: Photo Uploader */}
-            <PhotoUploader
-              onImageLoaded={handleImageLoaded}
-              hasImage={!!editorState.imageObj}
-            />
+          {/* LEFT COLUMN: Controls & Mission Control (Lg: 5 cols) */}
+          <div className="lg:col-span-5 flex flex-col gap-6 order-2 lg:order-1">
+            
+            <div className="bg-[#0D2419] border-3 border-[#050806] p-5 rounded-2xl shadow-[6px_6px_0px_#FF007A] flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b-2 border-[#FFDF00] pb-2 font-mono text-xs font-bold text-[#FFDF00] tracking-wider uppercase">
+                <span>MISSION CONTROL</span>
+                <span className="text-[#FF007A]">01 / 01</span>
+              </div>
 
-            {/* Step 2: Controls & Form Input Panel */}
-            <ControlPanel
-              activeFormat={activeFormat}
-              state={editorState}
-              onChangeField={handleChangeField}
-              onRerollTitle={handleRerollTitle}
-              onResetAdjustments={handleResetAdjustments}
-            />
+              {/* Photo Uploader */}
+              <PhotoUploader
+                onImageLoaded={handleImageLoaded}
+                hasImage={!!editorState.imageObj}
+              />
+
+              {/* Form Input Control Panel */}
+              <ControlPanel
+                activeFormat={activeFormat}
+                state={editorState}
+                onChangeField={handleChangeField}
+                onRerollTitle={handleRerollTitle}
+                onResetAdjustments={handleResetAdjustments}
+              />
+            </div>
+
           </div>
 
-          {/* RIGHT COLUMN: Real-Time Interactive Canvas Preview & Export Actions (Lg: 7 cols) */}
+          {/* RIGHT COLUMN: Live Preview Panel (Lg: 7 cols) */}
           <div className="lg:col-span-7 flex flex-col items-center gap-5 order-1 lg:order-2">
             
-            {/* Canvas Viewport */}
-            <div className="w-full glass-panel p-4 sm:p-6 rounded-3xl border-2 border-[#0B5A36]/30 shadow-xl flex flex-col items-center">
+            <div className="w-full bg-[#0D2419] border-3 border-[#050806] p-5 rounded-2xl shadow-[6px_6px_0px_#FFDF00] flex flex-col items-center">
               
-              <div className="w-full flex items-center justify-between mb-3 text-xs font-mono font-bold text-[#0B5A36]">
-                <span className="flex items-center gap-1.5">
-                  <Sparkles size={14} className="text-[#FF007A]" /> LIVE GRAPHIC PREVIEW
+              <div className="w-full flex items-center justify-between border-b-2 border-[#FFDF00] pb-3 mb-4 font-mono text-xs font-bold text-[#FFDF00] tracking-wider uppercase">
+                <span className="flex items-center gap-2">
+                  LIVE PREVIEW <span className="w-2.5 h-2.5 bg-[#FF007A] inline-block animate-pulse" />
                 </span>
-                <span className="bg-[#FFDF00] text-[#121814] px-2 py-0.5 rounded border border-[#121814]">
-                  {activeFormat === 'A' ? 'PFP OVERLAY (1:1)' : 'BUILDER BADGE (16:9)'}
+                <span className="bg-[#FFDF00] text-[#121814] px-2.5 py-0.5 rounded font-black text-[11px]">
+                  {activeFormat === 'A' ? 'PFP OVERLAY (1:1)' : 'BUILDER BADGE (1200x640)'}
                 </span>
               </div>
 
@@ -145,36 +153,30 @@ export default function App() {
                   state={editorState}
                 />
               </div>
+
             </div>
 
-            {/* Event Instructions / Tips Box */}
-            <div className="w-full bg-[#0B5A36] text-[#FFFDF0] p-4 rounded-2xl border-2 border-[#FFDF00] shadow-md flex items-start gap-3">
-              <Info size={20} className="text-[#FFDF00] shrink-0 mt-0.5" />
-              <div className="text-xs space-y-1">
-                <p className="font-mono font-bold text-[#FFDF00] uppercase">
-                  How to Submit for #FrameInGoa:
-                </p>
-                <p className="opacity-90">
-                  1. Click <strong className="text-[#FFDF00]">DOWNLOAD PNG</strong> or <strong className="text-[#FF007A]">SHARE TO X</strong>.
-                </p>
-                <p className="opacity-90">
-                  2. Post on X with your generated graphic & hashtag <strong className="text-[#FFDF00]">#FrameInGoa</strong> to get featured on the HH Goa Radar!
-                </p>
-              </div>
+            {/* Quick Status Note */}
+            <div className="w-full bg-[#07150E] border-2 border-[#FFDF00]/40 p-3 rounded-xl font-mono text-xs text-[#E2E8F0] flex items-center justify-between shadow-sm">
+              <span className="flex items-center gap-2">
+                <Info size={16} className="text-[#FFDF00]" />
+                <span className="opacity-90">Instant 100% Client-Side Render</span>
+              </span>
+              <span className="text-[#FF007A] font-bold">NO LOGIN REQUIRED</span>
             </div>
 
           </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="w-full border-t-2 border-[#0B5A36]/20 bg-[#F7F3DC] py-6 px-4 text-center mt-12">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-[#0B5A36]">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-[#FF007A]">HACKER HOUSE GOA 2026</span>
-            <span>• 28-31 OCT 2026</span>
+      {/* Neo-brutalist Footer */}
+      <footer className="w-full border-t-2 border-[#FFDF00]/30 bg-[#050E09] py-6 px-4 text-center mt-12 font-mono text-xs text-[#64748B]">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-[#FFFDF0]">
+            <span className="font-bold text-[#FF007A]">HH / GOA 2026</span>
+            <span>// GOA, INDIA</span>
           </div>
-          <p className="opacity-75">Designed & Built for HH Goa Hackathon • #FrameInGoa</p>
+          <p className="text-[#FFDF00] font-bold">UPLOAD → FRAME → SHARE → SUBMIT (#FRAMEINGOA)</p>
         </div>
       </footer>
     </div>

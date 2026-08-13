@@ -3,7 +3,7 @@ import { drawRoundedRect, drawDashedCircle, drawPalmTreeIcon, applyCanvasFilter 
 /**
  * Renders Format A: PFP Overlay Frame onto Canvas (1080x1080)
  */
-export function renderFormatA(ctx, canvasWidth, canvasHeight, state) {
+export function renderFormatA(ctx, width, height, state) {
   const {
     imageObj,
     panX = 0,
@@ -16,7 +16,7 @@ export function renderFormatA(ctx, canvasWidth, canvasHeight, state) {
     customCaption = ''
   } = state;
 
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.clearRect(0, 0, width, height);
 
   // Theme Palette
   let bgColor = '#0B5A36';
@@ -32,35 +32,40 @@ export function renderFormatA(ctx, canvasWidth, canvasHeight, state) {
     accentColor = '#00FFCC';
   }
 
-  // 1. Background Fill & Texture
+  // 1. Outer Background
   ctx.fillStyle = bgColor;
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  ctx.fillRect(0, 0, width, height);
 
-  // Decorative Subtle Radial Palm Lines
+  // Outer Gold Edge Border
+  ctx.strokeStyle = badgeColor;
+  ctx.lineWidth = 6;
+  ctx.strokeRect(3, 3, width - 6, height - 6);
+
+  // Radial Background Pattern
   ctx.save();
-  ctx.strokeStyle = theme === 'retro_cream' ? 'rgba(11, 90, 54, 0.05)' : 'rgba(255, 253, 240, 0.04)';
+  ctx.strokeStyle = theme === 'retro_cream' ? 'rgba(11, 90, 54, 0.06)' : 'rgba(255, 253, 240, 0.05)';
   ctx.lineWidth = 1.5;
-  for (let i = -canvasWidth; i < canvasWidth * 2; i += 70) {
+  for (let i = -width; i < width * 2; i += 75) {
     ctx.beginPath();
-    ctx.arc(i, canvasHeight / 2, 350, 0, Math.PI * 2);
+    ctx.arc(i, height / 2, 400, 0, Math.PI * 2);
     ctx.stroke();
   }
   ctx.restore();
 
-  // 2. Render Header Branding (HACKER HOUSE + Devanagari "गोवा")
-  renderHeaderBranding(ctx, canvasWidth, canvasHeight, { textColor, accentColor, badgeColor, theme });
+  // 2. Header Section (Specific fonts: Rubik Mono One, Bodoni Moda, Yatra One)
+  renderHeaderBranding(ctx, width, height, { textColor, accentColor, badgeColor, theme });
 
-  // 3. Render Central Photo Circle (Single or Multi)
+  // 3. Central Photo Circle
   const allImages = imageObj ? [imageObj, ...teammates.filter(Boolean)] : [];
 
   if (allImages.length <= 1) {
-    renderSinglePFP(ctx, canvasWidth, canvasHeight, imageObj, { panX, panY, zoom, rotation, filter, bgColor, accentColor, badgeColor, textColor });
+    renderSinglePFP(ctx, width, height, imageObj, { panX, panY, zoom, rotation, filter, bgColor, accentColor, badgeColor, textColor });
   } else {
-    renderMultiPFP(ctx, canvasWidth, canvasHeight, allImages, { bgColor, accentColor, badgeColor, textColor });
+    renderMultiPFP(ctx, width, height, allImages, { bgColor, accentColor, badgeColor, textColor });
   }
 
-  // 4. Render Footer Event Banner
-  renderFooterBranding(ctx, canvasWidth, canvasHeight, { textColor, accentColor, badgeColor, customCaption });
+  // 4. Footer Banner (Strictly Bounded Caption)
+  renderFooterBranding(ctx, width, height, { textColor, accentColor, badgeColor, customCaption });
 }
 
 function renderHeaderBranding(ctx, width, height, options) {
@@ -68,38 +73,39 @@ function renderHeaderBranding(ctx, width, height, options) {
 
   ctx.save();
 
-  // Top Left: 2:47PM STUDIO Pixel Badge
-  drawRoundedRect(ctx, 40, 35, 140, 36, 6, '#FFDF00', '#121814', 2);
-  ctx.font = '700 13px "Share Tech Mono", monospace';
+  // Top-Left Badge: Specific Font "Rubik Mono One" (230x54px)
+  drawRoundedRect(ctx, 35, 35, 230, 54, 10, '#FFDF00', '#121814', 3);
+  ctx.font = '700 16px "Rubik Mono One", "Share Tech Mono", monospace';
   ctx.fillStyle = '#121814';
   ctx.textAlign = 'center';
-  ctx.fillText('2:47PM STUDIO', 110, 58);
+  ctx.fillText('2:47PM STUDIO', 150, 68);
 
-  // Top Right: Event Hashtag
-  ctx.font = '700 16px "Share Tech Mono", monospace';
-  ctx.fillStyle = accentColor;
-  ctx.textAlign = 'right';
-  ctx.fillText('#FrameInGoa', width - 40, 58);
+  // Top-Right Badge: Prominent Hot-Pink Pill "#FrameInGoa" (230x54px)
+  drawRoundedRect(ctx, width - 265, 35, 230, 54, 27, '#FF007A', '#FFFFFF', 3);
+  ctx.font = '800 22px "Share Tech Mono", monospace';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'center';
+  ctx.fillText('#FrameInGoa', width - 150, 69);
 
-  // Main Header Title: "HACKER HOUSE"
-  ctx.font = '900 64px "Instrument Serif", "Playfair Display", Georgia, serif';
+  // Main Header Title: Specific Ultra-Condensed Serif Font "Bodoni Moda" / "Instrument Serif"
+  const headerY = 132;
+  ctx.font = '900 72px "Bodoni Moda", "Instrument Serif", "Playfair Display", Georgia, serif';
   ctx.fillStyle = badgeColor;
   ctx.textAlign = 'center';
   ctx.shadowColor = 'rgba(0,0,0,0.4)';
   ctx.shadowBlur = 8;
-  const headerY = 115;
   ctx.fillText('HACKER HOUSE', width / 2 - 25, headerY);
   ctx.shadowBlur = 0;
 
-  // Devanagari overlay badge "गोवा" positioned right beside "HACKER HOUSE"
+  // Devanagari Overlay Badge "गोवा" (Specific Font "Yatra One")
   ctx.save();
-  ctx.translate(width / 2 + 155, headerY - 20);
+  ctx.translate(width / 2 + 175, headerY - 24);
   ctx.rotate(-0.06);
-  drawRoundedRect(ctx, -36, -18, 72, 36, 10, '#FF007A', '#FFFFFF', 2.5);
-  ctx.font = '800 20px "Outfit", sans-serif';
+  drawRoundedRect(ctx, -40, -20, 80, 40, 10, '#FF007A', '#FFFFFF', 2.5);
+  ctx.font = '400 24px "Yatra One", "Rozha One", "Outfit", sans-serif';
   ctx.fillStyle = '#FFFFFF';
   ctx.textAlign = 'center';
-  ctx.fillText('गोवा', 0, 6);
+  ctx.fillText('गोवा', 0, 8);
   ctx.restore();
 
   ctx.restore();
@@ -108,12 +114,11 @@ function renderHeaderBranding(ctx, width, height, options) {
 function renderSinglePFP(ctx, width, height, imageObj, options) {
   const { panX, panY, zoom, rotation, filter, accentColor, badgeColor } = options;
 
-  // Center Photo Circle Parameters (Resized and repositioned to avoid overlaps)
   const centerX = width / 2;
-  const centerY = height / 2 + 15; // Centered with ample space from header and footer
-  const radius = 290; // Balanced size
+  const centerY = height / 2 + 25;
+  const radius = 330; // 660px diameter
 
-  // Outer Drop Shadow
+  // Outer Shadow
   ctx.save();
   ctx.beginPath();
   ctx.arc(centerX + 4, centerY + 6, radius, 0, Math.PI * 2);
@@ -121,17 +126,15 @@ function renderSinglePFP(ctx, width, height, imageObj, options) {
   ctx.fill();
   ctx.restore();
 
-  // Photo Crop Circle
+  // Photo Circular Clip
   ctx.save();
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
   ctx.clip();
 
-  // Dark Green Fill before photo load
   ctx.fillStyle = '#07331E';
   ctx.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
 
-  // Draw User Photo
   if (imageObj) {
     ctx.save();
     applyCanvasFilter(ctx, filter);
@@ -151,8 +154,7 @@ function renderSinglePFP(ctx, width, height, imageObj, options) {
     ctx.drawImage(imageObj, -dw / 2, -dh / 2, dw, dh);
     ctx.restore();
   } else {
-    // Placeholder Text when no photo is uploaded
-    ctx.font = '700 24px "Share Tech Mono", monospace';
+    ctx.font = '700 26px "Share Tech Mono", monospace';
     ctx.fillStyle = '#FFFDF0';
     ctx.textAlign = 'center';
     ctx.fillText('UPLOAD PHOTO', centerX, centerY);
@@ -160,14 +162,14 @@ function renderSinglePFP(ctx, width, height, imageObj, options) {
 
   ctx.restore(); // Restore clip
 
-  // Electric Hot Pink Dashed Border Ring
-  drawDashedCircle(ctx, centerX, centerY, radius + 8, accentColor, [12, 8], 5);
+  // Electric Hot Pink Dashed Outer Ring
+  drawDashedCircle(ctx, centerX, centerY, radius + 10, accentColor, [14, 8], 6);
 
-  // Sunshine Yellow Palm Tree Sticker Badge (Top Right of circle)
+  // Palm Tree Sticker Badge (Top Right of circle)
   const badgeAngle = -Math.PI / 4;
-  const badgeX = centerX + Math.cos(badgeAngle) * (radius + 8);
-  const badgeY = centerY + Math.sin(badgeAngle) * (radius + 8);
-  const badgeRadius = 30;
+  const badgeX = centerX + Math.cos(badgeAngle) * (radius + 10);
+  const badgeY = centerY + Math.sin(badgeAngle) * (radius + 10);
+  const badgeRadius = 34;
 
   ctx.save();
   ctx.beginPath();
@@ -178,7 +180,7 @@ function renderSinglePFP(ctx, width, height, imageObj, options) {
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  drawPalmTreeIcon(ctx, badgeX, badgeY + 2, 1.3, '#0B5A36', '#0B5A36');
+  drawPalmTreeIcon(ctx, badgeX, badgeY + 2, 1.4, '#0B5A36', '#0B5A36');
   ctx.restore();
 }
 
@@ -186,28 +188,28 @@ function renderMultiPFP(ctx, width, height, images, options) {
   const { accentColor } = options;
   const count = Math.min(images.length, 4);
   const centerX = width / 2;
-  const centerY = height / 2 + 15;
+  const centerY = height / 2 + 25;
 
   let positions = [];
-  const radius = count > 2 ? 140 : 170;
+  const radius = count > 2 ? 160 : 190;
 
   if (count === 2) {
     positions = [
-      { x: centerX - 130, y: centerY },
-      { x: centerX + 130, y: centerY }
+      { x: centerX - 145, y: centerY },
+      { x: centerX + 145, y: centerY }
     ];
   } else if (count === 3) {
     positions = [
-      { x: centerX, y: centerY - 100 },
-      { x: centerX - 130, y: centerY + 100 },
-      { x: centerX + 130, y: centerY + 100 }
+      { x: centerX, y: centerY - 105 },
+      { x: centerX - 145, y: centerY + 105 },
+      { x: centerX + 145, y: centerY + 105 }
     ];
   } else {
     positions = [
-      { x: centerX - 130, y: centerY - 100 },
-      { x: centerX + 130, y: centerY - 100 },
-      { x: centerX - 130, y: centerY + 100 },
-      { x: centerX + 130, y: centerY + 100 }
+      { x: centerX - 145, y: centerY - 105 },
+      { x: centerX + 145, y: centerY - 105 },
+      { x: centerX - 145, y: centerY + 105 },
+      { x: centerX + 145, y: centerY + 105 }
     ];
   }
 
@@ -242,26 +244,27 @@ function renderFooterBranding(ctx, width, height, options) {
   ctx.save();
   const footerY = height - 110;
 
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
   ctx.fillRect(0, footerY, width, 110);
 
   ctx.strokeStyle = accentColor;
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(0, footerY);
   ctx.lineTo(width, footerY);
   ctx.stroke();
 
   // Event Location & Dates
-  ctx.font = '700 22px "Share Tech Mono", monospace';
+  ctx.font = '700 24px "Share Tech Mono", monospace';
   ctx.fillStyle = '#FFDF00';
   ctx.textAlign = 'center';
-  ctx.fillText('GOA, INDIA  •  28 - 31 OCT 2026', width / 2, footerY + 42);
+  ctx.fillText('GOA, INDIA  •  28 - 31 OCT 2026', width / 2, footerY + 44);
 
-  // Sub caption
-  ctx.font = '500 16px "Outfit", sans-serif';
+  // Sub caption (Strictly Bounded)
+  const cleanCaption = (customCaption || 'OFFICIAL HACKATHON PARTICIPANT FRAME').trim().toUpperCase().substring(0, 42);
+  ctx.font = '600 17px "Outfit", sans-serif';
   ctx.fillStyle = textColor;
-  ctx.fillText(customCaption || 'OFFICIAL HACKATHON PARTICIPANT FRAME', width / 2, footerY + 78);
+  ctx.fillText(cleanCaption, width / 2, footerY + 80);
 
   ctx.restore();
 }

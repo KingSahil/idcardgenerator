@@ -22,7 +22,37 @@ export const BUILDER_TITLES = [
   "Bounty Hunter Supreme 🎯",
   "Vector Database Guru 🧠",
   "Consensus Crafter 📜",
-  "Goa Sunset Hacker 🌅"
+  "Goa Sunset Hacker 🌅",
+  "Vite Speed Demon ⚡",
+  "GraphQL Oracle 👁️",
+  "Docker Container King 🐳",
+  "Postgres Optimizer 🐘",
+  "CSS Pixel Sorcerer 🪄",
+  "TypeScript Type Guard 🛡️",
+  "Git Rebase Maverick 🔀",
+  "Cyberpunk Hacker 🕶️",
+  "Zero Bug Titan 🐛",
+  "Sub-10ms Latency Boss ⏱️",
+  "Neural Net Ninja 🧬",
+  "Blockchain Nomad ⛓️",
+  "Mainnet Warrior 🚀",
+  "Gas Fee Saver ⛽",
+  "Autonomous Agent Smith 🤖",
+  "Hackathon Champion 🏆",
+  "DevRel Magician 🪄",
+  "Open Source Champion 🌐",
+  "Infinite Loop Breaker 🔄",
+  "Vercel Deploy God ☁️",
+  "Terminal Overlord 🖥️",
+  "State Management Sensei 🧘",
+  "Payload Hacker 📦",
+  "Crypto Cipher Master 🔑",
+  "Solana TPU Whisperer ⚡",
+  "Codebase Pathfinder 🗺️",
+  "Memory Leak Catcher 💧",
+  "UI/UX Mastermind 🎯",
+  "Midnight Bug Hunter 🌌",
+  "Syntactic Sugar Boss 🍬"
 ];
 
 export const STACK_SUGGESTIONS = [
@@ -31,7 +61,7 @@ export const STACK_SUGGESTIONS = [
   "React & Next.js",
   "Python & PyTorch",
   "TypeScript & Node",
-  "Smart Contracts & Solidity",
+  "Solidity & Web3",
   "Flutter & Mobile",
-  "Go & Distributed Systems"
+  "Go & Microservices"
 ];

@@ -29,39 +29,44 @@ export default function ControlPanel({
   ];
 
   return (
-    <div className="w-full glass-panel p-5 rounded-2xl border-2 border-[#0B5A36]/20 shadow-md space-y-4">
-      {/* SECTION 1: FORMAT B CUSTOMIZATION FIELDS */}
+    <div className="w-full bg-[#07150E] p-4 rounded-xl border border-[#FFDF00]/30 space-y-4">
+      {/* SECTION 1: FORMAT B CUSTOMIZATION FIELDS WITH STRICT LIMITS */}
       {activeFormat === 'B' && (
-        <div className="space-y-3 pb-3 border-b border-[#0B5A36]/15">
-          <div className="flex items-center gap-2 text-[#0B5A36] font-mono text-xs font-bold uppercase tracking-wider">
-            <Sparkles size={14} className="text-[#FF007A]" /> Builder ID Details
+        <div className="space-y-3 pb-3 border-b border-[#FFDF00]/20">
+          <div className="flex items-center gap-2 text-[#FFDF00] font-mono text-xs font-bold uppercase tracking-wider">
+            <Sparkles size={14} className="text-[#FF007A]" /> Builder ID Inputs (Strictly Bounded)
           </div>
 
-          {/* Name Field */}
+          {/* Name Field (Max 25 chars) */}
           <div>
-            <label className="block text-xs font-mono font-bold text-[#0B5A36] mb-1">
-              Your Name / Handle
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-mono font-bold text-[#FFFDF0]">
+                Your Name / Handle
+              </label>
+              <span className="text-[10px] font-mono text-[#FFDF00]">
+                {name.length}/25
+              </span>
+            </div>
             <input
               type="text"
               value={name}
               onChange={(e) => onChangeField('name', e.target.value)}
               placeholder="e.g. Satoshi Nakamoto (@satoshin)"
               className="custom-input font-bold"
-              maxLength={30}
+              maxLength={25}
             />
           </div>
 
-          {/* Builder Title (With Reroll Button) */}
+          {/* Builder Title (With Reroll Button - Max 35 chars) */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-mono font-bold text-[#0B5A36]">
+              <label className="text-xs font-mono font-bold text-[#FFFDF0]">
                 Builder Class Title
               </label>
               <button
                 type="button"
                 onClick={onRerollTitle}
-                className="text-xs font-mono font-bold text-[#FF007A] hover:text-[#E0006B] flex items-center gap-1 bg-[#FF007A]/10 px-2 py-0.5 rounded-full"
+                className="text-xs font-mono font-bold text-[#FFDF00] hover:text-[#FF007A] flex items-center gap-1 bg-[#FF007A]/20 hover:bg-[#FF007A]/40 px-2 py-0.5 rounded-full border border-[#FF007A]"
               >
                 <Dices size={13} /> Reroll Title 🎲
               </button>
@@ -72,23 +77,29 @@ export default function ControlPanel({
                 value={builderTitle}
                 onChange={(e) => onChangeField('builderTitle', e.target.value)}
                 placeholder="Click reroll button!"
-                className="custom-input bg-[#FF007A]/5 border-[#FF007A]/30 text-[#FF007A] font-extrabold"
+                className="custom-input bg-[#FF007A]/10 border-[#FF007A] text-[#FFDF00] font-extrabold"
+                maxLength={35}
               />
             </div>
           </div>
 
-          {/* Stack & Role Field */}
+          {/* Stack & Role Field (Max 30 chars) */}
           <div>
-            <label className="block text-xs font-mono font-bold text-[#0B5A36] mb-1">
-              Stack / Role
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-mono font-bold text-[#FFFDF0]">
+                Tech Stack / Role
+              </label>
+              <span className="text-[10px] font-mono text-[#FFDF00]">
+                {stack.length}/30
+              </span>
+            </div>
             <input
               type="text"
               value={stack}
               onChange={(e) => onChangeField('stack', e.target.value)}
               placeholder="e.g. Fullstack & Rust"
               className="custom-input"
-              maxLength={40}
+              maxLength={30}
             />
             {/* Quick Stack Suggestion Chips */}
             <div className="flex flex-wrap gap-1.5 mt-1.5">
@@ -97,7 +108,7 @@ export default function ControlPanel({
                   key={item}
                   type="button"
                   onClick={() => onChangeField('stack', item)}
-                  className="text-[10px] font-mono bg-white hover:bg-[#FFDF00] border border-[#0B5A36]/20 px-2 py-0.5 rounded text-[#0B5A36] font-semibold transition"
+                  className="text-[10px] font-mono bg-[#0D2419] hover:bg-[#FFDF00] hover:text-[#121814] border border-[#FFDF00]/30 px-2 py-0.5 rounded text-[#FFDF00] font-semibold transition"
                 >
                   + {item}
                 </button>
@@ -105,33 +116,38 @@ export default function ControlPanel({
             </div>
           </div>
 
-          {/* Team Name Field */}
+          {/* Team Name Field (Max 30 chars) */}
           <div>
-            <label className="block text-xs font-mono font-bold text-[#0B5A36] mb-1">
-              Team / Squad Name
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-mono font-bold text-[#FFFDF0]">
+                Team / Squad Name
+              </label>
+              <span className="text-[10px] font-mono text-[#FFDF00]">
+                {teamName.length}/30
+              </span>
+            </div>
             <input
               type="text"
               value={teamName}
               onChange={(e) => onChangeField('teamName', e.target.value)}
               placeholder="e.g. Team Antigravity"
               className="custom-input"
-              maxLength={35}
+              maxLength={30}
             />
           </div>
         </div>
       )}
 
-      {/* SECTION 2: PHOTO ADJUSTMENT CONTROLS (ZOOM & ROTATION) */}
+      {/* SECTION 2: PHOTO ADJUSTMENT CONTROLS */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#0B5A36] uppercase">
+          <span className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#FFDF00] uppercase">
             <SlidersHorizontal size={14} className="text-[#FF007A]" /> Photo Adjustments
           </span>
           <button
             type="button"
             onClick={onResetAdjustments}
-            className="text-[11px] font-mono text-[#64748B] hover:text-[#0B5A36] underline"
+            className="text-[11px] font-mono text-[#FFDF00]/70 hover:text-[#FFDF00] underline"
           >
             Reset position
           </button>
@@ -139,8 +155,8 @@ export default function ControlPanel({
 
         {/* Zoom Slider */}
         <div className="flex items-center gap-3">
-          <ZoomIn size={16} className="text-[#0B5A36]" />
-          <span className="text-xs font-mono text-[#0B5A36] w-12 font-bold">Zoom:</span>
+          <ZoomIn size={16} className="text-[#FFDF00]" />
+          <span className="text-xs font-mono text-[#FFFDF0] w-12 font-bold">Zoom:</span>
           <input
             type="range"
             min="0.5"
@@ -150,50 +166,45 @@ export default function ControlPanel({
             onChange={(e) => onChangeField('zoom', parseFloat(e.target.value))}
             className="w-full accent-[#FF007A]"
           />
-          <span className="text-xs font-mono text-[#0B5A36] w-10 text-right font-bold">
+          <span className="text-xs font-mono text-[#FFDF00] w-10 text-right font-bold">
             {Math.round(zoom * 100)}%
           </span>
         </div>
 
         {/* Rotation Controls */}
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-mono text-[#0B5A36] font-bold flex items-center gap-1">
+          <span className="text-xs font-mono text-[#FFFDF0] font-bold flex items-center gap-1">
             <RotateCw size={14} /> Rotate:
           </span>
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => onChangeField('rotation', (rotation - 90) % 360)}
-              className="px-2.5 py-1 text-xs font-mono font-bold bg-white border border-[#0B5A36]/30 rounded-lg hover:bg-[#FFDF00]"
+              className="px-2.5 py-1 text-xs font-mono font-bold bg-[#0D2419] border border-[#FFDF00]/30 rounded hover:bg-[#FFDF00] hover:text-[#121814] text-[#FFDF00]"
             >
               ↺ -90°
             </button>
             <button
               type="button"
               onClick={() => onChangeField('rotation', 0)}
-              className="px-2 py-1 text-xs font-mono font-bold bg-white border border-[#0B5A36]/30 rounded-lg hover:bg-[#FFDF00]"
+              className="px-2 py-1 text-xs font-mono font-bold bg-[#0D2419] border border-[#FFDF00]/30 rounded hover:bg-[#FFDF00] hover:text-[#121814] text-[#FFDF00]"
             >
               0°
             </button>
             <button
               type="button"
               onClick={() => onChangeField('rotation', (rotation + 90) % 360)}
-              className="px-2.5 py-1 text-xs font-mono font-bold bg-white border border-[#0B5A36]/30 rounded-lg hover:bg-[#FFDF00]"
+              className="px-2.5 py-1 text-xs font-mono font-bold bg-[#0D2419] border border-[#FFDF00]/30 rounded hover:bg-[#FFDF00] hover:text-[#121814] text-[#FFDF00]"
             >
               ↻ +90°
             </button>
           </div>
         </div>
-
-        {/* Drag Hint */}
-        <p className="text-[11px] font-mono text-center text-[#64748B] bg-[#0B5A36]/5 py-1 rounded">
-          💡 Touch/click and drag photo on canvas to reposition off-center faces
-        </p>
       </div>
 
       {/* SECTION 3: PHOTO FILTERS */}
-      <div className="pt-2 border-t border-[#0B5A36]/15">
-        <label className="block text-xs font-mono font-bold text-[#0B5A36] mb-2">
+      <div className="pt-2 border-t border-[#FFDF00]/20">
+        <label className="block text-xs font-mono font-bold text-[#FFDF00] mb-2">
           Color Filter Preset
         </label>
         <div className="grid grid-cols-3 gap-1.5">
@@ -202,10 +213,10 @@ export default function ControlPanel({
               key={f.id}
               type="button"
               onClick={() => onChangeField('filter', f.id)}
-              className={`py-1.5 px-2 rounded-lg font-mono text-xs font-bold transition-all ${
+              className={`py-1.5 px-2 rounded font-mono text-xs font-bold transition-all ${
                 filter === f.id
-                  ? 'bg-[#0B5A36] text-[#FFDF00] shadow-sm'
-                  : 'bg-white text-[#0B5A36] border border-[#0B5A36]/20 hover:bg-[#FFDF00]/30'
+                  ? 'bg-[#FF007A] text-white shadow-sm'
+                  : 'bg-[#0D2419] text-[#FFFDF0] border border-[#FFDF00]/30 hover:bg-[#FFDF00]/20'
               }`}
             >
               {f.label}
