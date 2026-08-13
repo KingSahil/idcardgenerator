@@ -74,13 +74,15 @@ export default function ExportActions({ activeFormat, state }) {
   };
 
   // Generate clean unique share URL for user state
-  const getUniqueShareUrl = () => {
+  const getUniqueShareUrl = (photoUrl) => {
     try {
       const url = new URL(window.location.origin + window.location.pathname);
       url.searchParams.set('format', activeFormat);
       if (state.name && state.name !== 'Satoshi Nakamoto') url.searchParams.set('name', state.name);
       if (state.builderTitle && !state.builderTitle.includes('Goa Vibe Coder')) url.searchParams.set('title', state.builderTitle);
-      url.searchParams.set('v', '1');
+      if (state.stack) url.searchParams.set('stack', state.stack);
+      const targetPhoto = photoUrl || state.cloudPhotoUrl;
+      if (targetPhoto) url.searchParams.set('photo', targetPhoto);
       return url.toString();
     } catch (e) {
       return window.location.origin;
@@ -152,7 +154,7 @@ export default function ExportActions({ activeFormat, state }) {
     }
 
     // 3. Construct Tweet Text with direct Cloud Image URL & Share Link
-    const shareUrl = getUniqueShareUrl();
+    const shareUrl = getUniqueShareUrl(cloudImageUrl);
     let tweetCaption = '';
 
     if (activeFormat === 'A') {

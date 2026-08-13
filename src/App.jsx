@@ -39,20 +39,34 @@ export default function App() {
       const urlStack = params.get('stack');
       const urlTeam = params.get('team');
       const urlBadgeId = params.get('badgeId');
+      const urlPhoto = params.get('photo');
 
       if (urlFormat === 'A' || urlFormat === 'B') {
         setActiveFormat(urlFormat);
       }
 
-      if (urlName || urlTitle || urlStack || urlTeam || urlBadgeId) {
+      if (urlName || urlTitle || urlStack || urlTeam || urlBadgeId || urlPhoto) {
         setEditorState((prev) => ({
           ...prev,
           name: urlName || prev.name,
           builderTitle: urlTitle || prev.builderTitle,
           stack: urlStack || prev.stack,
           teamName: urlTeam || prev.teamName,
-          badgeId: urlBadgeId || prev.badgeId
+          badgeId: urlBadgeId || prev.badgeId,
+          cloudPhotoUrl: urlPhoto || prev.cloudPhotoUrl
         }));
+
+        if (urlPhoto) {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.src = urlPhoto;
+          img.onload = () => {
+            setEditorState((prev) => ({
+              ...prev,
+              imageObj: img
+            }));
+          };
+        }
 
         // Dynamically update document title & OpenGraph metadata
         const displayTitle = urlName

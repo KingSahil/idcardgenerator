@@ -47,7 +47,7 @@ export default function CanvasEditor({ activeFormat, state, onUpdatePan, onImage
     };
   }, [activeFormat, state, canvasWidth, canvasHeight]);
 
-  // Handle File Selection
+  // Handle File Selection & Background Cloud Sync
   const handleFile = async (file) => {
     if (!file) return;
     setErrorMsg(null);
@@ -56,6 +56,22 @@ export default function CanvasEditor({ activeFormat, state, onUpdatePan, onImage
     try {
       const result = await processImageFile(file);
       onImageLoaded(result);
+
+      // Background upload photo to Catbox.moe for shareable URL photo parameter
+      try {
+        const formData = new FormData();
+        formData.append('reqtype', 'fileupload');
+        formData.append('fileToUpload', file, `photo-${Date.now()}.${file.name.split('.').pop() || 'png'}`);
+        const uploadRes = await fetch('https://catbox.moe/user/api.php', { method: 'POST', body: formData });
+        if (uploadRes.ok) {
+          const cloudUrl = await uploadRes.text();
+          if (cloudUrl && cloudUrl.trim().startsWith('https://')) {
+            onImageLoaded({ ...result, cloudPhotoUrl: cloudUrl.trim() });
+          }
+        }
+      } catch (cloudErr) {
+        console.warn('Background photo upload warning:', cloudErr);
+      }
     } catch (err) {
       setErrorMsg(err.message || 'Error processing photo. Please try another image.');
     } finally {
