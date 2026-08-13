@@ -1,4 +1,12 @@
 {
+  "functions": {
+    "api/og.js": {
+      "runtime": "edge"
+    },
+    "api/index.js": {
+      "runtime": "edge"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/og",
